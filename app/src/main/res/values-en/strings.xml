@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PeleMele</string>
+    <string name="lancer_chrono">Start timer</string>
+    <string name="suspendre_activit">Pause Activity</string>
+    <string name="quitter">Quit</string>
+    <string name="loc">Location</string>
+    <string name="meteo">Weather :</string>
+    <string name="pointer">Pointer</string>
+    <string name="capteurs">Sensors</string>
+    <string name="lancer_act_long">Launch long activity</string>
+    <string name="chrono">CHRONOMETER</string>
+    <string name="bonjour">HELLO</string>
+    <string name="accel">ACCELEROMETER</string>
+    <string name="select">SELECTION</string>
+    <string name="photo">CAMERA</string>
+    <string name="ouvrir_phot">OPEN PICTURE</string>
+    <string name="long_activity">Long activity</string>
+    <string name="contact">MY CONTACTS</string>
+    <string name="meteo_loc">Located meteo :</string>
+</resources>

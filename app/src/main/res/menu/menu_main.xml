@@ -1,0 +1,4 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:title="@string/lancer_chrono" android:id="@+id/lancer"/>
+    <item android:title="@string/suspendre_activit" android:id="@+id/suspendre"/>
+</menu>

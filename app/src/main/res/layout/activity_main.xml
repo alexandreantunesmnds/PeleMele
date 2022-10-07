@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+    <Button
+            android:text="@string/chrono"
+            android:textColor="#000000"
+            android:layout_width="180dp"
+            android:layout_height="60dp" android:id="@+id/button3"
+            android:onClick="clickChrono"
+            app:backgroundTint="#8BC34A" app:iconTint="#190000"
+            android:background="#FFEB3B"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="484dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/button"
+            android:layout_marginEnd="30dp"/>
+    <Button
+            android:text="@string/capteurs"
+            android:onClick="clickAccelero"
+            android:textColor="#000000"
+            android:layout_width="180dp"
+            android:layout_height="60dp" android:id="@+id/capteurs"
+            app:backgroundTint="#D09ED8" app:iconTint="#190000"
+            android:background="#F44336"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="412dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="212dp"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+            android:text="@string/bonjour"
+            android:textColor="#000000"
+            android:layout_width="180dp"
+            android:layout_height="60dp" android:id="@+id/button"
+            app:backgroundTint="#FF9800" app:iconTint="#190000"
+            android:background="#F44336"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="484dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="212dp"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+            android:text="@string/select"
+            android:onClick="clickSelect"
+            android:textColor="#000000"
+            android:layout_width="180dp"
+            android:layout_height="60dp" android:id="@+id/select"
+            app:backgroundTint="#E91E63" app:iconTint="#190000"
+            android:background="#F44336"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="560dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="212dp"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+            android:text="@string/photo"
+            android:onClick="clickPhoto"
+            android:textColor="#000000"
+            android:layout_width="180dp"
+            android:layout_height="60dp" android:id="@+id/button2"
+            app:backgroundTint="#2196F3" app:iconTint="#190000"
+            android:background="#009688"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="412dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/capteurs" android:layout_marginEnd="30dp"/>
+    <Button
+            android:text="@string/meteo"
+            android:textColor="#000000"
+            android:layout_width="180dp"
+            android:layout_height="60dp" android:id="@+id/button10"
+            android:onClick="clickMeteo"
+            app:backgroundTint="#FFEB3B" app:iconTint="#190000"
+            android:background="#FF5722"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="560dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/select"
+            android:layout_marginEnd="30dp"/>
+    <androidx.constraintlayout.widget.Group android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                            app:constraint_referenced_ids="button,button3,button2"
+                                            android:id="@+id/group"/>
+    <Button
+            android:text="@string/ouvrir_phot"
+            android:onClick="clickOpen"
+            android:layout_width="200dp"
+            android:layout_height="60dp" android:id="@+id/button4"
+            app:backgroundTint="#009688" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="36dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="104dp"
+            android:textColor="#000000" android:layout_marginEnd="107dp" app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+            android:text="@string/long_activity"
+            android:onClick="LongActivity"
+            android:layout_width="200dp"
+            android:layout_height="60dp" android:id="@+id/button7"
+            app:backgroundTint="#FF5722"
+            android:textColor="#212121"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="188dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="104dp" android:layout_marginEnd="107dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+            android:text="@string/contacts"
+            android:onClick="ContactActivity"
+            android:layout_width="200dp"
+            android:layout_height="60dp" android:id="@+id/button11"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="112dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="104dp" app:backgroundTint="#EFA63B" android:textColor="#5D4037"
+            android:layout_marginEnd="107dp" app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

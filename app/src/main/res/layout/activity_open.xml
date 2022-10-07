@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".OpenActivity">
+
+    <ImageView
+            android:layout_width="180dp"
+            android:layout_height="160dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="284dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="124dp" tools:ignore="ImageContrastCheck" android:contentDescription="TODO"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

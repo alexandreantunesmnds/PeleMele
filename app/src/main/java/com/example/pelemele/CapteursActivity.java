@@ -51,7 +51,6 @@ public class CapteursActivity extends AppCompatActivity {
         sensorManager.unregisterListener(mSensorEventListener,mMagnetometer);
     }
 
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

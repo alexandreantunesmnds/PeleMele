@@ -3,10 +3,14 @@ package com.example.pelemele;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +33,10 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import cz.msebera.android.httpclient.Header;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,67 +51,149 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
 
 public class MeteoActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
+    private final int GPS =686;
+    private final String KEY = "a5925a9a3cae31b4b32f3e4edd942bd3";
     private double lat;
     private double longi;
-    private String temp;
-    private String description;
-    private String vent;
-    private boolean printed_info; //permet de rendre l'affichage des informations météo visible 1 fois
-    private boolean isGranted;
-
+    private String LINK = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + longi + "&appid="+KEY+"&units=metric&lang=fr";
+    private String temp,vent,description,ville, micon;
+    private ImageView mweatherIcon;
+    private int mCondition;
+    private Button boutonLoc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meteo);
-        if (ContextCompat.checkSelfPermission(MeteoActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MeteoActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(MeteoActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            } else {
-                ActivityCompat.requestPermissions(MeteoActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-            this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mweatherIcon = findViewById(R.id.imageView3);
+        boutonLoc = findViewById(R.id.button9);
+        boutonLoc.setEnabled(true);
+    }
+
+    /**
+     * Set action on click of view
+     * @param view On click button action
+     */
+    public void clickGeo(View view){
+        if(checkPermission()){
+            actionGetUserCoords();
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions,
-                                           @NotNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(MeteoActivity.this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                    this.isGranted = true;
-                    getLocation();
-                }
-            } else if (ContextCompat.checkSelfPermission(MeteoActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-                this.isGranted = false;
-            }
-        }
-    }
+    /**
+     * Get longitude and altiude and display it with threads
+     */
     @SuppressLint("MissingPermission")
-    public void getLocation(){
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    // Got last known location. In some rare situations this can be null.
-                        // Logic to handle location object
-                        lat = location.getLatitude();
-                        longi = location.getLongitude();
+    private void actionGetUserCoords(){
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                //Toast.makeText(MeteoActivity.this, "Lo: "+location.getLongitude()+" / La: "+location.getLatitude(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MeteoActivity.this,"Affichage de la météo",Toast.LENGTH_SHORT).show();
+                lat = location.getLatitude();
+                longi = location.getLongitude();
+                LINK = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + longi + "&appid="+KEY+"&units=metric&lang=fr";
+                boutonLoc.setEnabled(false);
+                boutonLoc.setBackgroundColor(Color.TRANSPARENT);
+                boutonLoc.setTextColor(Color.TRANSPARENT);
+                actionDisplayMeteo();
+            }else{
+                Toast.makeText(MeteoActivity.this, "Position inconnue, affichage météo impossible", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void actionDisplayMeteo() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.i("LIEN",LINK);
+                    InputStream in = new java.net.URL(LINK).openStream();
+                    JSONObject res = readStream(in);
+                    temp = res.getJSONObject("main").getString("temp");
+                    description = res.getJSONArray("weather").getJSONObject(0).getString("description");
+                    vent =res.getJSONObject("wind").getString("speed");
+                    ville =res.getString("name");
+                    mCondition=res.getJSONArray("weather").getJSONObject(0).getInt("id");
+                    micon=updateWeatherIcon(mCondition);
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+                runOnUiThread(() -> {
+                    float temperat = Float.parseFloat(temp);
+                    int temperature = (int) temperat;
+                    TextView v = findViewById(R.id.textView);
+                    TextView villet = findViewById(R.id.textView3);
+                    TextView temper = findViewById(R.id.textView2);
+                    int resourceID=getResources().getIdentifier(micon,"drawable",getPackageName());
+                    mweatherIcon.setImageResource(resourceID);
+                    v.append("\nDescription : " + description + "\nVent : " + vent + " m/s"); //reste à ajouter l'icône
+                    villet.append(" "+ville);
+                    temper.setText(temperature+"°C");
                 });
+            }
+        };
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(runnable);
     }
 
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------//
+    /**
+     * Check if Permission available
+     * @return if permission is available
+     */
+    private boolean checkPermission(){
+        boolean res = true;
+        if ((ContextCompat.checkSelfPermission(MeteoActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                ||  (ContextCompat.checkSelfPermission(MeteoActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)){
+            //When permissions is not granted,Request permission
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},GPS);
+            res=false;
+        }
+        return res;
+    }
+    /**
+     * This method may start an activity allowing the user to choose which permissions to grant and which to reject.
+     * @param requestCode The request code passed in onRequestPermissionsResult
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
+     *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+     *
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            // If request is cancelled, the result arrays are empty.
+            case 686:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MeteoActivity.this, "Localisation autorisée", Toast.LENGTH_SHORT).show();
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                } else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    Toast.makeText(MeteoActivity.this, "Localisation non autorisée", Toast.LENGTH_SHORT).show();
+                }break;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
+    //----------------------------------------------------------------------------------------------------------------//
     private JSONObject readStream(InputStream is) throws IOException, JSONException {
         StringBuilder sb = new StringBuilder();
         BufferedReader r = new BufferedReader(new InputStreamReader(is), 1000);
@@ -114,33 +204,61 @@ public class MeteoActivity extends AppCompatActivity {
         return new JSONObject(sb.toString());
     }
 
-    public void clickGeo(View view) {
-        if (isGranted && !printed_info) {
-            Toast.makeText(MeteoActivity.this, "Longitude : " + longi + " Latitude : " + lat, Toast.LENGTH_SHORT).show();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + longi + "&appid=a5925a9a3cae31b4b32f3e4edd942bd3&units=metric&lang=fr";
-                        InputStream in = new java.net.URL(url).openStream();
-                        JSONObject res = readStream(in);
-                        temp = res.getJSONObject("main").getString("temp");
-                        description = res.getJSONArray("weather").getJSONObject(0).getString("description");
-                        vent = res.getJSONObject("wind").getString("speed");
-                    } catch (JSONException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    runOnUiThread(() -> {
-                        TextView v = findViewById(R.id.textView);
-                        v.append("\nTempérature : " + temp + "°C" + "\nDescription : " + description + "\nVent : " + vent + " m/s"); //reste à ajouter l'icône
-                    });
-                }
-            };
-            ExecutorService service = Executors.newSingleThreadExecutor();
-            service.execute(runnable);
-            printed_info = true;
-        } else if (!isGranted){
-            Toast.makeText(MeteoActivity.this, "Vous devez autoriser la localisation", Toast.LENGTH_SHORT).show();
+    private static String updateWeatherIcon(int condition)
+    {
+        if(condition>=0 && condition<300)
+        {
+            return "thunderstorm1";
         }
+        else if(condition>=300 && condition<500)
+        {
+            return "lightrain";
+        }
+        else if(condition>=500 && condition<600)
+        {
+            return "shower";
+        }
+        else  if(condition>=600 && condition<=700)
+        {
+            return "snow2";
+        }
+        else if(condition>=701 && condition<=771)
+        {
+            return "fog";
+        }
+
+        else if(condition>=772 && condition<800)
+        {
+            return "overcast";
+        }
+        else if(condition==800)
+        {
+            return "sunny";
+        }
+        else if(condition>=801 && condition<=804)
+        {
+            return "cloudy";
+        }
+        else  if(condition>=900 && condition<=902)
+        {
+            return "thunderstorm1";
+        }
+        if(condition==903)
+        {
+            return "snow1";
+        }
+        if(condition==904)
+        {
+            return "sunny";
+        }
+        if(condition>=905 && condition<=1000)
+        {
+            return "thunderstrom2";
+        }
+
+        return "weather"; //image météo inconnue
+
+
     }
+
 }

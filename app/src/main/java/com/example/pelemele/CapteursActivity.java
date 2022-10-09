@@ -30,7 +30,7 @@ public class CapteursActivity extends AppCompatActivity {
     private float [] lastAccelerometer = new float [3];
     private float[] lastMagnetometer = new float [3];
 
-    private DessinVecteur dessin;
+    private DessinVecteur dessin; //vecteur accéléromètre
     private ExecutorService executorService;
 
     private float[] floatOrientation = new float [3];

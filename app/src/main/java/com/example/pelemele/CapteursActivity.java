@@ -27,15 +27,17 @@ public class CapteursActivity extends AppCompatActivity {
     private Sensor mMagnetometer;
     private boolean activation;
 
-    private float [] lastAccelerometer = new float [3];
-    private float[] lastMagnetometer = new float [3];
-
     private DessinVecteur dessin; //vecteur accéléromètre
     private ExecutorService executorService;
-
-    private float[] floatOrientation = new float [3];
-    private float[] floatRotationMatrix = new float [9];
     protected float xA, yA, zA,xM,yM,zM;
+
+    private float[] valuesAccelerometer;
+    private float[] valuesMagneticField;
+
+    private float[] matrixR;
+    private float[] matrixI;
+    private float[] matrixValues;
+    private Compass myCompass;
 
     @Override
     protected void onResume() {
@@ -56,13 +58,19 @@ public class CapteursActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capteurs);
-        north = findViewById(R.id.northPoint);
         this.setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
         executorService = Executors.newFixedThreadPool(4);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mMagnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         dessin = new DessinVecteur(this);
         activation = false;
+        valuesAccelerometer = new float[3];
+        valuesMagneticField = new float[3];
+
+        matrixR = new float[9];
+        matrixI = new float[9];
+        matrixValues = new float[3];
+        myCompass = new Compass(this);
     }
 
     public void clickCapteur(View view) {
@@ -89,33 +97,35 @@ public class CapteursActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                System.arraycopy(event.values,0,lastAccelerometer,0,event.values.length);
                 xA = event.values[0];
                 yA = event.values[1];
                 zA = event.values[2];
-                //draw update vecteur
-                executorService.execute(new Runnable(){
+                System.arraycopy(event.values, 0, valuesAccelerometer, 0, 3);
+                executorService.execute(new Runnable() {
                     @Override
                     public void run() {
                         dessin.rebuild(event.values);
                     }
                 });
+
             } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-                System.arraycopy(event.values,0,lastMagnetometer,0,event.values.length);
                 xM = event.values[0];
                 yM = event.values[1];
                 zM = event.values[2];
+                System.arraycopy(event.values, 0, valuesMagneticField, 0, 3);
             }
-            SensorManager.getRotationMatrix(floatRotationMatrix,null,lastAccelerometer,lastMagnetometer);
-            SensorManager.getOrientation(floatRotationMatrix,floatOrientation);
-            north.setRotation(floatOrientation[0]* 360 / (2 * 3.14159f));
+            SensorManager.getRotationMatrix(
+                    matrixR,
+                    matrixI,
+                    valuesAccelerometer,
+                    valuesMagneticField);
+            SensorManager.getOrientation(matrixR, matrixValues);
+            myCompass.update(matrixValues[0]);
         }
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
         }
-
     };
 
 }

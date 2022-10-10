@@ -16,6 +16,8 @@ public class DessinVecteur extends View {
     AppCompatActivity context;
     RelativeLayout lContainerLayout;
     float[] p;
+    private float direction;
+
     public DessinVecteur(Context context) {
         super(context);
         this.context = (AppCompatActivity) context;
@@ -38,7 +40,7 @@ public class DessinVecteur extends View {
             canvas.drawLine(startX, startY, startX - (p[0] * 50), startY - (p[1] * 50), myPaint);
         }
     }
-        public void rebuild(float...p){
+        public void rebuild(float[]p){
             this.p = p;
             this.invalidate();
             try {

@@ -103,7 +103,7 @@ public class MeteoActivity extends AppCompatActivity {
                 boutonLoc.setTextColor(Color.TRANSPARENT);
                 actionDisplayMeteo();
             }else{
-                Toast.makeText(MeteoActivity.this, "Position inconnue, affichage météo impossible", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MeteoActivity.this, "Position inconnue, aucune connexion réseau", Toast.LENGTH_SHORT).show();
             }
         });
     }

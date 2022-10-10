@@ -7,7 +7,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout-fr/activity_meteo.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_capteurs.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_chronometre.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/activity_chronometre.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_contact.xml" value="0.21700879765395895" />
         <entry key="app/src/main/res/layout/activity_long.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.35625" />

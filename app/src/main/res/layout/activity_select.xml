@@ -8,17 +8,18 @@
         tools:context=".SelectActivity">
 
     <ImageView
-            android:layout_width="175dp"
-            android:layout_height="251dp" app:srcCompat="@mipmap/ic_launcher" android:id="@+id/select"
+            android:layout_width="336dp"
+            android:layout_height="312dp" app:srcCompat="@drawable/overcast" android:id="@+id/select"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="240dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="152dp" app:layout_constraintStart_toStartOf="parent"
             android:adjustViewBounds="true"
-            android:layout_marginStart="116dp" android:contentDescription="TODO"
-            />
+            android:layout_marginStart="36dp" android:contentDescription="TODO"
+            android:layout_marginEnd="39dp" app:layout_constraintEnd_toEndOf="parent"/>
     <SurfaceView
-            android:layout_width="190dp"
-            android:layout_height="106dp" android:id="@+id/surfaceView"
+            android:layout_width="336dp"
+            android:layout_height="312dp" android:id="@+id/surfaceView"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="300dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="108dp"/>
+            android:layout_marginTop="152dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="36dp" android:layout_marginEnd="39dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

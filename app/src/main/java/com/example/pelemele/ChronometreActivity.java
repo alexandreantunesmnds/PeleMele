@@ -31,7 +31,6 @@ public class ChronometreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chronometre);
         Button b = (Button) findViewById(R.id.button5);
         b.setEnabled(false);
-        Toast.makeText(ChronometreActivity.this, "Chronooooo", Toast.LENGTH_SHORT).show();
     }
 
     public void clickStop(View view) {

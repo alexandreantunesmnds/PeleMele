@@ -15,7 +15,7 @@
             app:backgroundTint="#4CAF50" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="341dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="89dp" android:textColor="#263238"
-    />
+            android:layout_marginEnd="88dp" app:layout_constraintEnd_toEndOf="parent"/>
     <ProgressBar
             style="?android:attr/progressBarStyle"
             android:layout_width="104dp"
@@ -23,5 +23,5 @@
             android:id="@+id/progressBar"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="239dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="153dp"
-    />
+            android:layout_marginEnd="154dp" app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

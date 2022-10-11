@@ -38,7 +38,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         if(contact.getPhoto() != null){
             Picasso.get().load(contact.getPhoto()).into(holder.img_contact);
         }else{
-            holder.img_contact.setImageResource(R.mipmap.ic_launcher_round);
+            holder.img_contact.setImageResource(R.drawable.contact_icon);
         }
 
     }

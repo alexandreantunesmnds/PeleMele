@@ -14,14 +14,21 @@ import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
+import java.io.ObjectInputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
 public class CapteursActivity extends AppCompatActivity {
-    private ImageView north;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private  Switch switchCapt;
     private SensorManager sensorManager;
     private Sensor mAccelerometer;
     private Sensor mMagnetometer;
@@ -71,10 +78,11 @@ public class CapteursActivity extends AppCompatActivity {
         matrixI = new float[9];
         matrixValues = new float[3];
         myCompass = new Compass(this);
+        activation=false;
     }
 
     public void clickCapteur(View view) {
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch switchCapt = findViewById(R.id.switchCapt);
+        switchCapt = findViewById(R.id.switchCapt);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if(!activation){
             activation = true;
